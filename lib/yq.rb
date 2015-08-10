@@ -12,6 +12,7 @@ module Yq
   end
 
   def self.search(query, hash)
+    return hash if query == '.'
     JMESPath.search(query, hash)
   end
 
