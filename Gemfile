@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'contracts'
 gem 'jmespath'
 
 group :development, :test do 

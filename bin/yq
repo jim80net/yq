@@ -4,8 +4,6 @@ $:.unshift File.join(File.dirname(__FILE__), '../lib')
 
 require 'logger'
 require 'optparse'
-require 'contracts'
-include Contracts
 
 require 'yq'
 
