@@ -1,7 +1,6 @@
 require 'open3'
 require 'climate_control'
 require 'timeout'
-load File.expand_path(File.join('..','..', 'bin', 'yq'), __FILE__)
 
 describe 'bin/yq' do
   # Contract Or[nil,String] => self

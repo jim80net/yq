@@ -73,9 +73,6 @@ def main_loop
   start
 end
 
-if $0 == __FILE__
-  prereqs
-  self.send(@options[:context]) 
-end
 
-
+prereqs
+self.send(@options[:context]) 
