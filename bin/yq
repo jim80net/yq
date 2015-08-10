@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), '../lib')
+
+require 'logger'
+require 'optparse'
+require 'contracts'
+include Contracts
+
+require 'yq'
+
+$stdout.sync = $stderr.sync = true
+unless defined?(LOGGER)
+  LOGGER = Logger.new($stderr) 
+end
+LOGGER.level = Logger::INFO
+
+@options = {
+  context: :main_loop
+}
+
+
+def prereqs 
+  opts = OptionParser.new do |opts|
+    opts.banner = "Usage: #{File.basename($0)}"
+    opts.separator ''
+    opts.on_tail('-h', '--help', 'Show this message') do
+      puts opts
+      exit 0
+    end
+    opts.on('--verbose', '-v', 'verbose') do 
+      LOGGER.level = Logger::DEBUG
+    end
+    opts.on("--develop", "Run in developer mode") do
+      @options[:context] = :develop
+    end
+  end
+  opts.parse!
+  
+  required_vars = %w[
+  ]
+  required_vars.each do |v|
+    raise "#{v} must be specified in the environment variables" unless ENV[v]
+  end
+
+end
+
+
+def develop
+  require 'pry'
+  LOGGER.level = Logger::DEBUG
+  LOGGER.info "Develop mode"
+
+  binding.pry
+end
+
+def main_loop
+  begin
+
+  rescue => e
+    LOGGER.error "Unhandled exception #{e.class}: #{e.message}"
+    e.backtrace.each do |v|
+      LOGGER.debug v
+    end
+  end
+end
+
+if $0 == __FILE__
+  prereqs
+  self.send(@options[:context]) 
+end
+
+

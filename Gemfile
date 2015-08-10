@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'contracts'
 gem 'jmespath'
 
 group :development, :test do 
@@ -8,4 +9,5 @@ group :development, :test do
   gem 'rake'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'climate_control'
 end
