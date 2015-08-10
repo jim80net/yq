@@ -21,6 +21,8 @@ LOGGER.level = Logger::INFO
 
 
 def prereqs 
+  ARGV << '--help' if ARGV.empty?
+
   opts = OptionParser.new do |opts|
     opts.banner = "Usage: #{File.basename($0)}"
     opts.separator ''
@@ -45,24 +47,32 @@ def prereqs
 
 end
 
-
-def develop
-  require 'pry'
-  LOGGER.level = Logger::DEBUG
-  LOGGER.info "Develop mode"
-
-  binding.pry
-end
-
-def main_loop
+def start
   begin
+    @yaml = $stdin.read
+
+    puts Yq.search_yaml(ARGV[0], @yaml)
 
   rescue => e
     LOGGER.error "Unhandled exception #{e.class}: #{e.message}"
     e.backtrace.each do |v|
       LOGGER.debug v
     end
+    raise
   end
+
+end
+
+def develop
+  require 'pry'
+  LOGGER.level = Logger::DEBUG
+  LOGGER.info "Develop mode"
+  start
+  binding.pry
+end
+
+def main_loop
+  start
 end
 
 if $0 == __FILE__
