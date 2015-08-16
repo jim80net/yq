@@ -22,11 +22,6 @@ EOF
       expect(JMESPath).to receive(:search).with(query, hash)
       subject
     end
-
-    describe "'.'" do
-      subject { described_class.search('.', hash) }
-      it { is_expected.to match(hash) }
-    end
   end
 
   describe '#yaml_to_hash' do
