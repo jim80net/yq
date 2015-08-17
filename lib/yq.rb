@@ -1,4 +1,6 @@
 require "yq/version"
+require 'yq/ruby_jq'
+require 'contracts'
 require 'jmespath'
 require 'stringio'
 require 'yaml'

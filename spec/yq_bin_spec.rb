@@ -56,7 +56,7 @@ describe 'bin/yq' do
     expect(status).to be_success
   end
 
-  context 'parses' do
+  describe 'parses' do
     let(:query) { 'foo.bar' }
     let(:yaml) { <<-EOF }
 foo:
