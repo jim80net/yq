@@ -8,8 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Yq::VERSION
   spec.authors       = ["Jim Park"]
   spec.email         = ["yq@jim80.net"]
-  spec.summary       = %q{A JMESpath wrapper for YAML}
-  spec.description   = ""
+  spec.summary       = %q{A JQ wrapper for YAML}
+  spec.description   = "This unceremoniously shells out to a jq available in $PATH.
+  Please make sure jq is installed."
   spec.homepage      = "https://github.com/jim80net/yq"
   spec.license       = "GPLv2"
 
