@@ -1,26 +1,41 @@
 describe Yq do
   subject { described_class }
 
-  let(:query) { 'foo.bar' }
-
-  let (:hash) {
+  let(:hash) {
     { "foo" => { "bar" => { "baz" => "value" }}}
   }
 
-  let (:yaml) {<<EOF}
+  let(:yaml) {<<EOF}
 foo:
   bar:
     baz: value
 EOF
 
+  let(:json) {<<EOF.chomp}
+{"foo":{"bar":{"baz":"value"}}}
+EOF
+
+  let(:jq_response) {<<EOF}
+{
+  "baz": "value"
+}
+EOF
+
   describe '.search' do
-    subject { described_class.search(query, hash) }
+    subject { described_class.search('.foo.bar', json) }
 
-    it { is_expected.to match("baz" => "value") }
+    it { is_expected.to match(jq_response) }
 
-    it 'passes it through to JMESPath' do
-      expect(JMESPath).to receive(:search).with(query, hash)
+    it 'passes it through to jq' do
+      allow(Yq).to receive(:which).with('jq').and_return('/bin/jq')
+      expect(Open3).to receive(:popen2).with('/bin/jq .foo.bar').and_return(jq_response)
       subject
+    end
+
+    subject { described_class.search'.foobar', json }
+
+    it 'stops processing when jq exits uncleanly' do
+      # not mocking at this level, see implementation
     end
   end
 
@@ -34,8 +49,18 @@ EOF
     it { is_expected.to match(yaml) }
   end
 
+  describe '.yaml_to_json' do
+    subject { described_class.yaml_to_json(yaml) }
+    it { is_expected.to match(json) }
+  end
+
+  describe '.json_to_yaml' do
+    subject { described_class.json_to_yaml(json) }
+    it { is_expected.to match(yaml) }
+  end
+
   describe '.search_yaml' do
-    subject { described_class.search_yaml(query, yaml) }
+    subject { described_class.search_yaml('.foo.bar', yaml) }
 
     it { is_expected.to match("baz: value") }
   end
@@ -64,7 +89,5 @@ EOF
       }
       it  { is_expected.to eq('/other/bin/jq') }
     end
-
   end
-
 end

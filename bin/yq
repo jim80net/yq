@@ -68,7 +68,6 @@ def develop
   LOGGER.level = Logger::DEBUG
   LOGGER.info "Develop mode"
   start
-  binding.pry
 end
 
 def main_loop
