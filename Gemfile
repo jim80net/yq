@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'jmespath'
+gem 'contracts'
 
 group :development, :test do 
   gem 'pry'

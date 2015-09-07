@@ -43,7 +43,9 @@ def prereqs
     raise "#{v} must be specified in the environment variables" unless ENV[v]
   end
 
+  raise "jq not installed" unless Yq.which('jq')
 end
+
 
 def start
   begin
@@ -66,7 +68,6 @@ def develop
   LOGGER.level = Logger::DEBUG
   LOGGER.info "Develop mode"
   start
-  binding.pry
 end
 
 def main_loop

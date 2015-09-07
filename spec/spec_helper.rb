@@ -27,7 +27,7 @@ RSpec.configure do |config|
     config.default_formatter = 'doc'
   end
 
-  config.order = :random
+  config.example_status_persistence_file_path = File.join(SPEC_ROOT, 'helpers', 'failures.txt')
 
   Kernel.srand config.seed
 end

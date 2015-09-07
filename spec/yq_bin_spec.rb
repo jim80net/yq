@@ -56,16 +56,15 @@ describe 'bin/yq' do
     expect(status).to be_success
   end
 
-  context 'parses' do
-    let(:query) { 'foo.bar' }
+  describe 'parses' do
     let(:yaml) { <<-EOF }
 foo:
   bar:
     baz: value
 EOF
 
-    it 'foo.bar' do
-      out_err, status = run_bin(query, yaml)
+    it '.foo.bar' do
+      out_err, status = run_bin('.foo.bar', yaml)
       expect(out_err).to match('baz: value')
       expect(status).to be_success
     end
