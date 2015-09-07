@@ -7,6 +7,16 @@ require 'yaml'
 require 'json'
 
 module Yq
+
+  def self.which(cmd)
+    exts = ENV['PATH'] ? ENV['PATH'].split(':') : ['']
+    exts.each { |ext|
+      exe = File.join(ext, cmd)
+      return exe if File.executable?(exe) && !File.directory?(exe)
+    }
+    return nil
+  end
+
   def self.search_yaml(query, yaml)
     hash = yaml_to_hash(yaml)
     resp_hash = search(query, hash)
