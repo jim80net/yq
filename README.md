@@ -1,6 +1,6 @@
 # Yq
 
-Use `yq` to parse YAML documents using [JMESPath](http://jmespath.org/). This gem is a simple wrapper around the [jmespath gem](https://github.com/jmespath/jmespath.rb). 
+Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. It should be available in your path to use this gem. 
 
 ## Installation
 
@@ -29,7 +29,7 @@ stuff:
   foo: 
     bar: baz
    
-$ cat stuff.yml | yq 'stuff.foo'
+$ cat stuff.yml | yq '.stuff.foo'
 ---
 bar: baz
     
