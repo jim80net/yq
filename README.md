@@ -1,6 +1,6 @@
 # Yq
 
-Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. It should be available in your path to use this gem. 
+Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. `jq` should be available in your path to use this gem. 
 
 ## Installation
 
