@@ -1,5 +1,7 @@
 # Yq
 
+[![Gem Version](https://badge.fury.io/rb/yq.svg)](http://badge.fury.io/rb/yq)
+
 Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. `jq` should be available in your path to use this gem. 
 
 ## Installation
