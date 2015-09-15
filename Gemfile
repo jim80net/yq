@@ -1,7 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'contracts'
-
 group :development, :test do 
   gem 'pry'
   gem 'rspec', '~> 3.3'

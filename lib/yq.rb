@@ -1,6 +1,5 @@
 require "yq/version"
 require 'open3'
-require 'contracts'
 require 'stringio'
 require 'yaml'
 require 'json'
