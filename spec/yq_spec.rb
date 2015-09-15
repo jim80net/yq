@@ -34,6 +34,44 @@ EOF
 - baz
 EOF
 
+  let(:jq_non_json_response_2) {<<EOF}
+{
+  "foo": "bar",
+  "baz": {
+    "blah": 10240,
+    "asdf": "qwer"
+  },
+  "bing": "bo.ng"
+}
+{
+  "foo": "far",
+  "bing": "ba.ng"
+}
+[1,2,3]
+[4,5,6]
+"asdf"
+"qwer"
+EOF
+
+  let(:yaml_from_non_json_response_2) {<<EOF}
+---
+- foo: bar
+  baz:
+    blah: 10240
+    asdf: qwer
+  bing: bo.ng
+- foo: far
+  bing: ba.ng
+- - 1
+  - 2
+  - 3
+- - 4
+  - 5
+  - 6
+- asdf
+- qwer
+EOF
+
   describe '.search' do
     subject { described_class.search('.foo.bar', json) }
 
@@ -76,6 +114,11 @@ EOF
     context 'non-json response' do
       subject { described_class.json_to_yaml(jq_non_json_response) }
       it {is_expected.to match(yaml_from_non_json_response)}
+    end
+
+    context 'non-json response 2' do
+      subject { described_class.json_to_yaml(jq_non_json_response_2) }
+      it {is_expected.to match(yaml_from_non_json_response_2)}
     end
   end
 

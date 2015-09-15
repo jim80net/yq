@@ -73,7 +73,7 @@ module Yq
 
   def self.json_to_hash(json)
     JSON.parse(json)
-  rescue JSON::ParserError => e
+  rescue JSON::ParserError
     LOGGER.debug "Non JSON output from jq. Interpreting."
     interpret_non_json_output(json)
   end
@@ -83,9 +83,18 @@ module Yq
   end
 
   def self.interpret_non_json_output(string)
-    string.split("\n").map do |line|
-      obj = JSON.parse(%Q[{ "value": #{line} }])
-      obj["value"]
+    regex = /(^\{.+?^\}|^\[.+?\]|^".+?")/m
+    matches = string.scan(regex)
+
+    without_the_wrapping_array = matches.map(&:first)
+    without_the_wrapping_array.map do |line|
+      begin
+        JSON.parse(line)
+      rescue JSON::ParserError
+        LOGGER.debug "Assuming #{line} is a string."
+        obj = JSON.parse(%Q[{ "value": #{line} }])
+        obj["value"]
+      end
     end
   end
 end
