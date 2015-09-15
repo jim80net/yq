@@ -74,9 +74,19 @@ module Yq
 
   def self.json_to_hash(json)
     JSON.parse(json)
+  rescue JSON::ParserError => e
+    LOGGER.debug "Non JSON output from jq. Interpreting."
+    interpret_non_json_output(json)
   end
 
   def self.hash_to_json(hash)
     hash.to_json
+  end
+
+  def self.interpret_non_json_output(string)
+    string.split("\n").map do |line|
+      obj = JSON.parse(%Q[{ "value": #{line} }])
+      obj["value"]
+    end
   end
 end

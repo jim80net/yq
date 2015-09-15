@@ -21,6 +21,19 @@ EOF
 }
 EOF
 
+  let(:jq_non_json_response) {<<EOF}
+"foo"
+"bar"
+"baz"
+EOF
+
+  let(:yaml_from_non_json_response) {<<EOF}
+---
+- foo
+- bar
+- baz
+EOF
+
   describe '.search' do
     subject { described_class.search('.foo.bar', json) }
 
@@ -59,6 +72,11 @@ EOF
   describe '.json_to_yaml' do
     subject { described_class.json_to_yaml(json) }
     it { is_expected.to match(yaml) }
+
+    context 'non-json response' do
+      subject { described_class.json_to_yaml(jq_non_json_response) }
+      it {is_expected.to match(yaml_from_non_json_response)}
+    end
   end
 
   describe '.search_yaml' do
