@@ -28,14 +28,16 @@ EOF
 
     it 'passes it through to jq' do
       allow(Yq).to receive(:which).with('jq').and_return('/bin/jq')
-      expect(Open3).to receive(:popen2).with('/bin/jq .foo.bar').and_return(jq_response)
+      expect(Open3).to receive(:popen2).with(%q[/bin/jq '.foo.bar']).and_return(jq_response)
       subject
     end
 
-    subject { described_class.search'.foobar', json }
+    context 'unclean exit' do
+      subject { described_class.search'.foobar', json }
 
-    it 'stops processing when jq exits uncleanly' do
-      # not mocking at this level, see implementation
+      it 'stops processing when jq exits uncleanly' do
+        # not mocking at this level, see implementation
+      end
     end
   end
 
