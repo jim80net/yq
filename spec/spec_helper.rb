@@ -1,5 +1,8 @@
 $:.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
 
+require 'coveralls'
+Coveralls.wear!
+
 require 'logger'
 require 'pry'
 require 'yq'
