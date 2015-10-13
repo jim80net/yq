@@ -4,21 +4,11 @@
 [![Build Status](https://travis-ci.org/jim80net/yq.svg?branch=master)](https://travis-ci.org/jim80net/yq)
 [![Coverage Status](https://coveralls.io/repos/jim80net/yq/badge.svg?branch=master&service=github)](https://coveralls.io/github/jim80net/yq?branch=master)
 
-Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. `jq` should be available in your path to use this gem. 
+Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. It will convert the YAML input into JSON, run `jq` against it, then convert the output back into YAML. Sometimes, `jq` will output non-JSON, but `yq` will just turn that into valid YAML. 
+
+`jq` should be available in your `$PATH` to use this gem. 
 
 ## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'yq'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
 
     $ gem install yq
 
