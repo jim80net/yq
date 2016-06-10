@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'json2yaml'
+
 group :development, :test do 
   gem 'pry'
   gem 'rspec', '~> 3.3'
