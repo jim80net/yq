@@ -15,15 +15,21 @@ module Yq
     return nil
   end
 
-  def self.search_yaml(query, yaml)
+  def self.search_yaml(query, yaml, output: :yaml)
     req_json = yaml_to_json(yaml)
+    case output
+    when :raw
+      search(query, req_json, flags: ['--raw-output'])
+    when :json
+      search(query, req_json)
+    when :yaml
     resp_json = search(query, req_json)
-    resp_yaml = json_to_yaml(resp_json)
-    return resp_yaml
+      json_to_yaml(resp_json)
+    end
   end
 
-  def self.search(query, json)
-    cmd = [which('jq'), query]
+  def self.search(query, json, flags: [])
+    cmd = [which('jq')] + flags + [query]
     input = json
     output = ""
     LOGGER.debug "sending jq #{cmd}"
