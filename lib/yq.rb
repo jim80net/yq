@@ -23,12 +23,12 @@ module Yq
   end
 
   def self.search(query, json)
-    cmd = which('jq') + %Q[ '#{query}']
+    cmd = [which('jq'), query]
     input = json
     output = ""
     LOGGER.debug "sending jq #{cmd}"
 
-    Open3.popen2(cmd) do |i, o, t|
+    Open3.popen2(*cmd) do |i, o, t|
       begin
         pid = t.pid
 
