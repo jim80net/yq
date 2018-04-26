@@ -11,6 +11,13 @@ foo:
     "'": value
 EOF
 
+  # support equivalent YAML syntaxes (depends on ruby version)
+  let(:yaml_regexp) {<<EOF}
+foo:
+  bar:
+    ("'"|''''|! ''''): value
+EOF
+
   let(:json) {<<EOF.chomp}
 {"foo":{"bar":{"'":"value"}}}
 EOF
@@ -102,7 +109,7 @@ EOF
 
   describe '.hash_to_yaml' do
     subject { described_class.hash_to_yaml(hash) }
-    it { is_expected.to match(yaml) }
+    it { is_expected.to match(yaml_regexp) }
   end
 
   describe '.yaml_to_json' do
@@ -112,7 +119,7 @@ EOF
 
   describe '.json_to_yaml' do
     subject { described_class.json_to_yaml(json) }
-    it { is_expected.to match(yaml) }
+    it { is_expected.to match(yaml_regexp) }
 
     context 'non-json response' do
       subject { described_class.json_to_yaml(jq_non_json_response) }
@@ -128,7 +135,7 @@ EOF
   describe '.search_yaml' do
     subject { described_class.search_yaml('.foo.bar', yaml) }
 
-    it { is_expected.to match(%q{"'": value}) }
+    it { is_expected.to match(/("'"|''''|! ''''): value/) }
   end
 
 
