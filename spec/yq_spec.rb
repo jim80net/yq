@@ -2,22 +2,31 @@ describe Yq do
   subject { described_class }
 
   let(:hash) {
-    { "foo" => { "bar" => { "baz" => "value" }}}
+    { "foo" => { "bar" => { "'" => "value" }}}
   }
 
   let(:yaml) {<<EOF}
 foo:
   bar:
-    baz: value
+    "'": value
+EOF
+
+  # support equivalent YAML syntaxes (depends on ruby version)
+  let(:yaml_regexp) {<<EOF}
+foo:
+  bar:
+    ("'"|''''|! ''''): value
 EOF
 
   let(:json) {<<EOF.chomp}
-{"foo":{"bar":{"baz":"value"}}}
+{"foo":{"bar":{"'":"value"}}}
 EOF
+
+  let(:jq_query) { %q({"\\t": .foo.bar["'"]}) }
 
   let(:jq_response) {<<EOF}
 {
-  "baz": "value"
+  "\\t": "value"
 }
 EOF
 
@@ -73,13 +82,14 @@ EOF
 EOF
 
   describe '.search' do
-    subject { described_class.search('.foo.bar', json) }
+
+    subject { described_class.search(jq_query, json) }
 
     it { is_expected.to match(jq_response) }
 
     it 'passes it through to jq' do
       allow(Yq).to receive(:which).with('jq').and_return('/bin/jq')
-      expect(Open3).to receive(:popen2).with(%q[/bin/jq '.foo.bar']).and_return(jq_response)
+      expect(Open3).to receive(:popen2).with('/bin/jq' , jq_query).and_return(jq_response)
       subject
     end
 
@@ -99,7 +109,7 @@ EOF
 
   describe '.hash_to_yaml' do
     subject { described_class.hash_to_yaml(hash) }
-    it { is_expected.to match(yaml) }
+    it { is_expected.to match(yaml_regexp) }
   end
 
   describe '.yaml_to_json' do
@@ -109,7 +119,7 @@ EOF
 
   describe '.json_to_yaml' do
     subject { described_class.json_to_yaml(json) }
-    it { is_expected.to match(yaml) }
+    it { is_expected.to match(yaml_regexp) }
 
     context 'non-json response' do
       subject { described_class.json_to_yaml(jq_non_json_response) }
@@ -125,7 +135,7 @@ EOF
   describe '.search_yaml' do
     subject { described_class.search_yaml('.foo.bar', yaml) }
 
-    it { is_expected.to match("baz: value") }
+    it { is_expected.to match(/("'"|''''|! ''''): value/) }
   end
 
 
