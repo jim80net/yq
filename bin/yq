@@ -9,16 +9,16 @@ require 'yq'
 
 $stdout.sync = $stderr.sync = true
 unless defined?(LOGGER)
-  LOGGER = Logger.new($stderr) 
+  LOGGER = Logger.new($stderr)
 end
 LOGGER.level = Logger::INFO
 
 @options = {
-  context: :main_loop
+  context: :main_loop,
+  output: :yaml
 }
 
-
-def prereqs 
+def prereqs
   ARGV << '--help' if ARGV.empty?
 
   opts = OptionParser.new do |opts|
@@ -28,15 +28,21 @@ def prereqs
       puts opts
       exit 0
     end
-    opts.on('--verbose', '-v', 'verbose') do 
+    opts.on('--verbose', '-v', 'verbose') do
       LOGGER.level = Logger::DEBUG
     end
     opts.on("--develop", "Run in developer mode") do
       @options[:context] = :develop
     end
+    opts.on('-r', '--raw-output') do
+      @options[:output] = :raw
+    end
+    opts.on('--json-output') do
+      @options[:output] = :json
+    end
   end
   opts.parse!
-  
+
   required_vars = %w[
   ]
   required_vars.each do |v|
@@ -51,7 +57,7 @@ def start
   begin
     @yaml = $stdin.read
 
-    puts Yq.search_yaml(ARGV[0], @yaml)
+    puts Yq.search_yaml(ARGV[0], @yaml, output: @options[:output])
 
   rescue => e
     LOGGER.error "Unhandled exception #{e.class}: #{e.message}"
@@ -76,4 +82,4 @@ end
 
 
 prereqs
-self.send(@options[:context]) 
+self.send(@options[:context])
