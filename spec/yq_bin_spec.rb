@@ -17,7 +17,7 @@ describe 'bin/yq' do
           i.close
         end
 
-        Timeout.timeout(0.5) do
+        Timeout.timeout(1.5) do
           oe.each { |v|
             output << v
           }
