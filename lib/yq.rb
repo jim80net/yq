@@ -1,4 +1,4 @@
-require "yq/version"
+require 'yq/version'
 require 'open3'
 require 'stringio'
 require 'yaml'
@@ -8,11 +8,11 @@ require 'timeout'
 module Yq
   def self.which(cmd)
     exts = ENV['PATH'] ? ENV['PATH'].split(':') : ['']
-    exts.each { |ext|
+    exts.each do |ext|
       exe = File.join(ext, cmd)
       return exe if File.executable?(exe) && !File.directory?(exe)
-    }
-    return nil
+    end
+    nil
   end
 
   def self.search_yaml(query, yaml, output: :yaml)
@@ -23,7 +23,7 @@ module Yq
     when :json
       search(query, req_json)
     when :yaml
-    resp_json = search(query, req_json)
+      resp_json = search(query, req_json)
       json_to_yaml(resp_json)
     end
   end
@@ -31,32 +31,30 @@ module Yq
   def self.search(query, json, flags: [])
     cmd = [which('jq')] + flags + [query]
     input = json
-    output = ""
+    output = ''
     LOGGER.debug "sending jq #{cmd}"
 
     Open3.popen2(*cmd) do |i, o, t|
-      begin
-        pid = t.pid
+      pid = t.pid
 
-        if input
-          i.puts input
-          i.close
-        end
-
-        Timeout.timeout(5) do
-          o.each { |v|
-            output << v
-          }
-        end
-      rescue Timeout::Error
-        LOGGER.warn "Timing out #{t.inspect} after 1 second"
-        Process.kill(15, pid)
-      ensure
-        status = t.value
-        raise "JQ failed to exit cleanly" unless status.success?
+      if input
+        i.puts input
+        i.close
       end
+
+      Timeout.timeout(5) do
+        o.each do |v|
+          output << v
+        end
+      end
+    rescue Timeout::Error
+      LOGGER.warn "Timing out #{t.inspect} after 1 second"
+      Process.kill(15, pid)
+    ensure
+      status = t.value
+      raise 'JQ failed to exit cleanly' unless status.success?
     end
-    return output
+    output
   end
 
   def self.yaml_to_json(yaml)
@@ -80,7 +78,7 @@ module Yq
   def self.json_to_hash(json)
     JSON.parse(json)
   rescue JSON::ParserError
-    LOGGER.debug "Non JSON output from jq. Interpreting."
+    LOGGER.debug 'Non JSON output from jq. Interpreting.'
     interpret_non_json_output(json)
   end
 
@@ -94,13 +92,11 @@ module Yq
 
     without_the_wrapping_array = matches.map(&:first)
     without_the_wrapping_array.map do |line|
-      begin
-        JSON.parse(line)
-      rescue JSON::ParserError
-        LOGGER.debug "Assuming #{line} is a string."
-        obj = JSON.parse(%Q[{ "value": #{line} }])
-        obj["value"]
-      end
+      JSON.parse(line)
+    rescue JSON::ParserError
+      LOGGER.debug "Assuming #{line} is a string."
+      obj = JSON.parse(%({ "value": #{line} }))
+      obj['value']
     end
   end
 end

@@ -1,12 +1,11 @@
-$:.unshift(File.expand_path("../lib", File.dirname(__FILE__)))
+$:.unshift(File.expand_path('../lib', File.dirname(__FILE__)))
 
 require 'logger'
 require 'pry'
 require 'yq'
 
-
 LOGGER = Logger.new('/dev/null')
-SPEC_ROOT = File.expand_path(File.dirname(__FILE__))
+SPEC_ROOT = __dir__
 WORK_ROOT = File.expand_path(File.join(SPEC_ROOT, '..'))
 
 RSpec.configure do |config|

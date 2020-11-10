@@ -4,30 +4,28 @@ require 'timeout'
 
 describe 'bin/yq' do
   # Contract Or[nil,String] => self
-  def run_bin(args = "", input = nil)
+  def run_bin(args = '', input = nil)
     status = nil
-    output = ""
+    output = ''
     cmd = "bin/yq #{args}"
     Open3.popen2e(cmd) do |i, oe, t|
-      begin
-        pid = t.pid
+      pid = t.pid
 
-        if input
-          i.puts input
-          i.close
-        end
-
-        Timeout.timeout(0.5) do
-          oe.each { |v|
-            output << v
-          }
-        end
-      rescue Timeout::Error
-        LOGGER.warn "Timing out #{t.inspect} after 1 second"
-        Process.kill(15, pid)
-      ensure
-        status = t.value
+      if input
+        i.puts input
+        i.close
       end
+
+      Timeout.timeout(0.5) do
+        oe.each do |v|
+          output << v
+        end
+      end
+    rescue Timeout::Error
+      LOGGER.warn "Timing out #{t.inspect} after 1 second"
+      Process.kill(15, pid)
+    ensure
+      status = t.value
     end
     [output, status]
   end
@@ -51,17 +49,17 @@ describe 'bin/yq' do
   end
 
   it 'supplies help' do
-    out_err, status = run_bin("--help")
+    out_err, status = run_bin('--help')
     expect(out_err).to match(/Usage: yq/)
     expect(status).to be_success
   end
 
   describe 'parses' do
-    let(:yaml) { <<-EOF }
-foo:
-  bar:
-    baz: value
-EOF
+    let(:yaml) { <<~EOF }
+      foo:
+        bar:
+          baz: value
+    EOF
 
     it '.foo.bar' do
       out_err, status = run_bin('.foo.bar', yaml)
