@@ -1,8 +1,7 @@
 # Yq
 
 [![Gem Version](https://badge.fury.io/rb/yq.svg)](http://badge.fury.io/rb/yq)
-[![Build Status](https://travis-ci.org/jim80net/yq.svg?branch=master)](https://travis-ci.org/jim80net/yq)
-[![Coverage Status](https://coveralls.io/repos/jim80net/yq/badge.svg?branch=master&service=github)](https://coveralls.io/github/jim80net/yq?branch=master)
+![Rspec and Release](https://github.com/jim80net/yq/workflows/Rspec%20and%20Release/badge.svg)
 
 Use `yq` to parse YAML documents using [jq](https://stedolan.github.io/jq/). This gem is a simple wrapper around the executable. It will convert the YAML input into JSON, run `jq` against it, then convert the output back into YAML. Sometimes, `jq` will output non-JSON, but `yq` will just turn that into valid YAML. 
 
