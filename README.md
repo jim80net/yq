@@ -29,6 +29,8 @@ bar: baz
     
 ```
 
+`yq`  converts the STDIN to JSON, and passes it to `jq`, along with the `jq` query you specify. The result is then turned back into YAML.  
+
 ## Contributing
 
 1. Fork it ( https://github.com/jim80net/yq/fork )
